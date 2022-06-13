@@ -8,7 +8,7 @@ export const PostItem = (props) => {
           {props.post.body}
         </div>
         <div>
-             <button>delete</button>
+             <button onClick={() => props.remove(props.post)}>delete</button>
         </div>
       </div>
     )
