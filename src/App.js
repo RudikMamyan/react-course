@@ -1,34 +1,33 @@
-import React, {useState, useMemo} from "react";
+import React, {useState, useMemo, useEffect} from "react";
 import './style/App.css'
 import { MyModal } from "./components/MyModal/MyModal";
 import { PostFilter } from "./components/PostFilter";
 import { PostForm } from "./components/PostForm";
 import { PostList } from "./components/PostList";
 import { MyButton } from "./components/ui/button/MyButton";
+import { usePosts } from "./hooks/usePosts";
+import axios from "axios";
+import PostService from "./Api/postService";
 
 function App() {
-  const [posts, setPosts] = useState([
-    {id: 1, title: 'html', body: 'description'},
-    {id: 2, title: 'Css', body: 'description'},
-    {id: 3, title: 'JavaScript', body: 'description'}
-  ]);
+  const [posts, setPosts] = useState([]);
   const [filter, setFilter] = useState({sort: '', query: ''})
   const [modal, setModal] = useState(false)
 
-  const sortedPosts = useMemo(() => {
-     if(filter.sort) {
-      return [...posts].sort((a, b) => a[filter.sort].localeCompare(b[filter.sort]))
-    }
-    return posts;
-  }, [filter.sort, posts])
+  const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
 
-  const sortedAndSearchedPosts = useMemo(() => {
-      return sortedPosts.filter((post) => post.title.toLowerCase().includes(filter.query))
-  }, [filter.query, sortedPosts])
+  useEffect(() => {
+    fetchPosts()
+  }, []);
 
   const createPost = (newPost) => {
     setPosts([...posts, newPost])
     setModal(false)
+  }
+
+  async function fetchPosts() {
+    const posts = await PostService.getAll()
+    setPosts(posts)
   }
 
   const removePost = (remove) => {
