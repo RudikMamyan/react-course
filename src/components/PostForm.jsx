@@ -4,7 +4,7 @@ import { MyButton } from './ui/button/MyButton';
 
 export const PostForm = ({create}) => {
 
-  const boddyInputRef = useRef();
+  const bodyInputRef = useRef();
   const [post, setPost] = useState({
     title: '', body: '',
   });
@@ -24,7 +24,7 @@ export const PostForm = ({create}) => {
   return (
     <form>
         <MyInput 
-          ref={boddyInputRef}
+          ref={bodyInputRef}
           value={post.title}
           onChange={(e) => setPost({...post, title: e.target.value})}
           type='text' 
